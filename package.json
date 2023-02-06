@@ -2,8 +2,7 @@
   "name": "@gron1gh1/localpkg",
   "version": "1.0.0",
   "type": "module",
-  "description": "",
-  "main": "index.js",
+  "description": "Monorepo supports local packages",
   "files": [
     "bin",
     "package.json"
