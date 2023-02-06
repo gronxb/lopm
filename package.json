@@ -4,6 +4,10 @@
   "type": "module",
   "description": "",
   "main": "index.js",
+  "files": [
+    "bin",
+    "package.json"
+  ],
   "scripts": {
     "build": "node esbuild.config.js"
   },
@@ -11,12 +15,18 @@
   "author": "",
   "license": "ISC",
   "bin": {
-    "localpkg": "./cli.js"
+    "localpkg": "./bin/index.cjs"
   },
   "dependencies": {
     "fs-extra": "^11.1.0"
   },
   "devDependencies": {
-    "esbuild": "^0.17.5"
+    "@types/fs-extra": "^11.0.1",
+    "@types/node": "^18.11.19",
+    "@typescript-eslint/eslint-plugin": "^5.50.0",
+    "@typescript-eslint/parser": "^5.50.0",
+    "esbuild": "^0.17.5",
+    "type-fest": "^3.5.5",
+    "typescript": "^4.9.5"
   }
 }

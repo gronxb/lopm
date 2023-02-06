@@ -1,9 +1,9 @@
 import { build } from "esbuild";
 
 build({
-  entryPoints: ["./src/index.js"],
+  entryPoints: ["./src/index.ts"],
   bundle: true,
-  external: ["fs", "path", "constants", "stream", "assert", "util"],
-  format: "esm",
-  outdir: "./bin",
+  format: "cjs",
+  platform: "node",
+  outfile: "./bin/index.cjs",
 });
