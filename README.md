@@ -1,5 +1,7 @@
 # localpkg
 
+[![NPM](https://img.shields.io/npm/v/@gron1gh1/localpkg)](https://www.npmjs.com/package/@gron1gh1/localpkg)
+
 Monorepo supports local packages.
 
 ## Why use `localpkg`?
@@ -9,11 +11,16 @@ When using local packages in a monorepo, you might experience peer dependency pr
 But if you use `localpkg`, hardlinks the files declared in the `files` field in the `package.json`  
 
 In other words, it has the same effect as a package installed by the npm registry.
-## Usage
-
+## Installation
+* local
 ```sh
-> pnpm add @gron1gh1/localpkg -D # or yarn
-> pnpm localpkg
+> pnpm add @gron1gh1/localpkg -D # or yarn / npm
+> pnpm localpkg -v
+```
+* global
+```sh
+> pnpm add -g @gron1gh1/localpkg # or yarn global add @gron1gh1/localpkg / npm install -g @gron1gh1/localpkg
+> localpkg -v
 ```
 
 ## `package.json` setting for local package
