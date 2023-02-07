@@ -1,5 +1,6 @@
 import { resolve } from "path";
 import * as fs from "fs-extra";
+import chalk from "chalk";
 
 import type { PackageJson } from "type-fest";
 import type { FilesField, LinkField } from "./type";
@@ -15,13 +16,15 @@ export const getLinkFields: () => Promise<LinkField[]> = async () => {
   try {
     const packageJson = await readPackagesJson(resolve("package.json"));
     if (!packageJson.dependencies) {
-      throw new Error("🔥 Not Found 'dependencies' field in package.json");
+      throw new Error(
+        chalk.red("🔥 Not Found 'dependencies' field in package.json")
+      );
     }
 
     const linkPackages = Object.entries(packageJson.dependencies)
       .filter(([key, value]) => {
         if (value!.startsWith("link")) {
-          console.log("🔥 find local package:", key);
+          console.log(chalk.blue("🔥 find local package:", key));
           return true;
         }
       })
@@ -32,7 +35,9 @@ export const getLinkFields: () => Promise<LinkField[]> = async () => {
 
     return linkPackages;
   } catch (e) {
-    throw new Error("🔥 No linked 'dependencies' field found in package.json");
+    throw new Error(
+      chalk.red("🔥 No linked 'dependencies' field found in package.json")
+    );
   }
 };
 
@@ -60,7 +65,7 @@ export const unlinkAlreadyModules = async (filesFields: FilesField[]) => {
   );
 
   for (const uniqueFolder of uniqueFolders) {
-    console.log("🔥 unlink", uniqueFolder);
+    console.log(chalk.blue("🔥 unlink", uniqueFolder));
     await fs.rm(resolve(currentPath, "node_modules", uniqueFolder), {
       recursive: true,
       force: true,
@@ -71,7 +76,7 @@ export const unlinkAlreadyModules = async (filesFields: FilesField[]) => {
 export const copyFilesToNodeModules = async (filesFields: FilesField[]) => {
   for (const field of filesFields) {
     if (!field.files) {
-      throw new Error("🔥 Not Found 'files' field in package.json");
+      throw new Error(chalk.red("🔥 Not Found 'files' field in package.json"));
     }
 
     for (const file of field.files) {
@@ -80,6 +85,7 @@ export const copyFilesToNodeModules = async (filesFields: FilesField[]) => {
       await fs.copy(targetPath, descPath, {
         overwrite: true,
       });
+      console.log(chalk.blue("🔥 copy", targetPath, "to", descPath));
     }
   }
 };
