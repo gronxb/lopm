@@ -1,4 +1,4 @@
-import { resolve } from "path";
+import { resolve, relative } from "path";
 import * as fs from "fs-extra";
 import chalk from "chalk";
 
@@ -85,7 +85,12 @@ export const copyFilesToNodeModules = async (filesFields: FilesField[]) => {
       await fs.copy(targetPath, descPath, {
         overwrite: true,
       });
-      console.log(chalk.blue("🔥 copy", targetPath, "to", descPath));
+
+      const relativeTargetPath = relative(process.cwd(), targetPath);
+      const relativeDescPath = relative(process.cwd(), descPath);
+      console.log(
+        chalk.blue("🔥 copy", relativeTargetPath, "to", relativeDescPath)
+      );
     }
   }
 };
