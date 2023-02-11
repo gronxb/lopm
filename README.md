@@ -1,26 +1,26 @@
-# localpkg
+# pkgm
 
-[![NPM](https://img.shields.io/npm/v/@gron1gh1/localpkg)](https://www.npmjs.com/package/@gron1gh1/localpkg)
+[![NPM](https://img.shields.io/npm/v/@pkgm/cli)](https://www.npmjs.com/package/@pkgm/cli)
 
 Monorepo supports local packages.
 
-## Why use `localpkg`?
+## Why use `pkgm`?
 
 When using local packages in a monorepo, you might experience peer dependency problems because you use symbolic links.
 
-But if you use `localpkg`, hard links the files declared in the `files` field in the `package.json`  
+But if you use `pkgm`, hard links the files declared in the `files` field in the `package.json`  
 
 In other words, it has the same effect as a package installed by the npm registry.
 ## Installation
 * local
 ```sh
-> pnpm add @gron1gh1/localpkg -D # or yarn / npm
-> pnpm localpkg -v
+> pnpm add @pkgm/cli -D # or yarn / npm
+> pnpm pkgm -v
 ```
 * global
 ```sh
-> pnpm add -g @gron1gh1/localpkg # or yarn global add @gron1gh1/localpkg / npm install -g @gron1gh1/localpkg
-> localpkg -v
+> pnpm add -g @pkgm/cli # or yarn global add @pkgm/cli / npm install -g @pkgm/cli
+> pkgm -v
 ```
 
 ## `package.json` setting for local package
@@ -37,15 +37,15 @@ Specify `files` field to export out
 ```
 
 ## `package.json` setting for app
-After `pnpm install` or `yarn install`, synchronization must be performed through the `localpkg` command.  
+After `pnpm install` or `yarn install`, synchronization must be performed through the `pkgm` command.  
 That is, it must be done immediately before build or development.  
 * **example**
 ```json
 "name": "bar"
 ...
 "scripts": {
-    "build": "localpkg && vite build",
-    "dev": "localpkg && vite"
+    "build": "pkgm && vite build",
+    "dev": "pkgm && vite"
 },
 ...
 ```

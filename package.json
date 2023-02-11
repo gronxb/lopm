@@ -1,5 +1,5 @@
 {
-  "name": "@gron1gh1/localpkg",
+  "name": "@pkgm/cli",
   "version": "1.0.2",
   "type": "module",
   "description": "Monorepo supports local packages",
