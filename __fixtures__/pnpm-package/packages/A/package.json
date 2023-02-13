@@ -1,0 +1,7 @@
+{
+  "name": "mock-a",
+  "version": "0.0.1",
+  "dependencies": {
+    "mock-b": "link:../B"
+  }
+}

@@ -1,9 +1,15 @@
-import { resolve, relative } from "path";
+import { resolve, relative, normalize } from "path";
 import * as fs from "fs-extra";
 import chalk from "chalk";
 
 import type { PackageJson } from "type-fest";
-import type { FilesField, LinkField } from "./type";
+import type {
+  LocalPackageInfo,
+  LinkField,
+  PackageManager,
+  HelperOptions,
+} from "./type";
+import { getWorkspaceRoot } from "workspace-tools";
 
 export const currentPath = process.cwd();
 
@@ -12,7 +18,7 @@ export const readPackagesJson = async (path: string) => {
   return JSON.parse(data) as PackageJson;
 };
 
-export const getLinkFields: () => Promise<LinkField[]> = async () => {
+export const getLinkFields = async () => {
   try {
     const packageJson = await readPackagesJson(resolve("package.json"));
     if (!packageJson.dependencies) {
@@ -22,18 +28,18 @@ export const getLinkFields: () => Promise<LinkField[]> = async () => {
     }
 
     const linkPackages = Object.entries(packageJson.dependencies)
-      .filter(([key, value]) => {
+      .filter(([_, value]) => {
         if (value!.startsWith("link")) {
-          console.log(chalk.blue("🔥 find local package:", key));
           return true;
         }
+        return false;
       })
       .map(([key, value]) => ({
         name: key,
         path: value!.split(":")[1],
       }));
 
-    return linkPackages;
+    return linkPackages as LinkField[];
   } catch (e) {
     throw new Error(
       chalk.red("🔥 No linked 'dependencies' field found in package.json")
@@ -41,9 +47,9 @@ export const getLinkFields: () => Promise<LinkField[]> = async () => {
   }
 };
 
-export const getFilesFields: (
+export const getLocalPackagesInfo: (
   linkFields: LinkField[]
-) => Promise<FilesField[]> = async (linkFields) => {
+) => Promise<LocalPackageInfo[]> = async (linkFields) => {
   return Promise.all(
     linkFields.map(async (linkField) => {
       const packageJson = await readPackagesJson(
@@ -59,38 +65,72 @@ export const getFilesFields: (
   );
 };
 
-export const unlinkAlreadyModules = async (filesFields: FilesField[]) => {
-  const uniqueFolders = new Set(
-    filesFields.map((field) => field.name.split("/")[0])
+export const unlinkAlreadyModules = async (
+  packagesInfo: LocalPackageInfo[]
+) => {
+  const alreadyModules = new Set(
+    packagesInfo.map((packageInfo) => packageInfo.name)
   );
 
-  for (const uniqueFolder of uniqueFolders) {
-    console.log(chalk.blue("🔥 unlink", uniqueFolder));
-    await fs.rm(resolve(currentPath, "node_modules", uniqueFolder), {
+  for (const module of alreadyModules) {
+    await fs.rm(normalize(resolve(currentPath, "node_modules", module)), {
       recursive: true,
       force: true,
     });
   }
 };
 
-export const copyFilesToNodeModules = async (filesFields: FilesField[]) => {
-  for (const field of filesFields) {
-    if (!field.files) {
+export const copyFilesToNodeModules = async (
+  packagesInfo: LocalPackageInfo[]
+) => {
+  for (const packageInfo of packagesInfo) {
+    if (!packageInfo.files) {
       throw new Error(chalk.red("🔥 Not Found 'files' field in package.json"));
     }
 
-    for (const file of field.files) {
-      const targetPath = resolve(field.path, file);
-      const descPath = resolve(currentPath, "node_modules", field.name, file);
+    for (const file of packageInfo.files) {
+      const targetPath = resolve(packageInfo.path, file);
+      const descPath = resolve(
+        currentPath,
+        "node_modules",
+        packageInfo.name,
+        file
+      );
       await fs.copy(targetPath, descPath, {
         overwrite: true,
       });
 
-      const relativeTargetPath = relative(process.cwd(), targetPath);
-      const relativeDescPath = relative(process.cwd(), descPath);
-      console.log(
-        chalk.blue("🔥 copy", relativeTargetPath, "to", relativeDescPath)
-      );
+      const relativeTargetPath = relative(currentPath, targetPath);
+      const relativeDescPath = relative(currentPath, descPath);
     }
   }
+};
+
+export const getPackageManager = async (cwd: string) => {
+  const workspaceRoot = getWorkspaceRoot(cwd);
+
+  if (!workspaceRoot) {
+    throw new Error(chalk.red("🔥 Not Found workspace root"));
+  }
+
+  const pkgmJsonPath = resolve(workspaceRoot, "pkgm.json");
+  const isPkgm = await fs.pathExists(pkgmJsonPath);
+  if (isPkgm) {
+    const data = await fs.readFile(pkgmJsonPath, "utf8");
+    const pkgmJson = JSON.parse(data) as { packageManager: PackageManager };
+    return pkgmJson.packageManager;
+  }
+
+  const yarnLockPath = resolve(workspaceRoot, "yarn.lock");
+  const pnpmLockPath = resolve(workspaceRoot, "pnpm-lock.yaml");
+
+  const isYarn = await fs.pathExists(yarnLockPath);
+  const isPnpm = await fs.pathExists(pnpmLockPath);
+
+  if (isYarn) {
+    return "yarn";
+  } else if (isPnpm) {
+    return "pnpm";
+  }
+  return null;
 };

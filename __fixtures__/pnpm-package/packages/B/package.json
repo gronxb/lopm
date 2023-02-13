@@ -1,0 +1,8 @@
+{
+  "name": "mock-b",
+  "version": "0.0.1",
+  "files": [
+    "dist",
+    "package.json"
+  ]
+}
