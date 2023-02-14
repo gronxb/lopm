@@ -1,6 +1,6 @@
 {
-  "name": "@lopkg/cli",
-  "version": "1.0.1",
+  "name": "lopm",
+  "version": "1.0.0",
   "type": "module",
   "description": "Monorepo supports local packages",
   "files": [
@@ -16,7 +16,7 @@
   "author": "",
   "license": "ISC",
   "bin": {
-    "lopkg": "./bin/index.cjs"
+    "lopm": "./bin/index.cjs"
   },
   "devDependencies": {
     "chokidar": "^3.5.3",

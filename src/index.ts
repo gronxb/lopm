@@ -41,7 +41,7 @@ export const addPackage = () => {
 
 const help = () => {
   console.log("");
-  console.log(chalk.blue("$ [pnpm or yarn] lopkg <options>"));
+  console.log(chalk.blue("$ [pnpm or yarn] lopm <options>"));
   console.log("");
   console.log(" options:");
   console.log("");
@@ -67,9 +67,9 @@ const init = async () => {
   if (!workspaceRoot) {
     throw new Error(chalk.red("🔥 Not Found workspace root"));
   }
-  const workspaceJsonPath = resolve(workspaceRoot, "lopkg.json");
-  const isLopkgJson = fs.pathExistsSync(workspaceJsonPath);
-  if (!isLopkgJson) {
+  const workspaceJsonPath = resolve(workspaceRoot, "lopm.json");
+  const isLopmJson = fs.pathExistsSync(workspaceJsonPath);
+  if (!isLopmJson) {
     fs.writeJSONSync(
       workspaceJsonPath,
       {
@@ -104,40 +104,41 @@ const spawn = async (args: string[]) => {
     )
     .flat();
 
-  targetWatchPath.forEach((watchPath) => {
-    const watchFn = async (
-      eventName: "add" | "addDir" | "change" | "unlink" | "unlinkDir",
-      path: string,
-      stats?: fs.Stats
-    ) => {
-      switch (eventName) {
-        case "change": {
-          const findPackageInfo = packagesInfo.find((packageInfo) =>
-            path.includes(resolve(currentPath, packageInfo.path))
-          );
+  const watchFn = async (
+    eventName: "add" | "addDir" | "change" | "unlink" | "unlinkDir",
+    path: string,
+    stats?: fs.Stats
+  ) => {
+    switch (eventName) {
+      case "change": {
+        const findPackageInfo = packagesInfo.find((packageInfo) =>
+          path.includes(resolve(currentPath, packageInfo.path))
+        );
 
-          if (!findPackageInfo) {
-            return;
-          }
-          await copyFilesToNodeModules([findPackageInfo]);
-          console.log(
-            chalk.blue("🔥 changed package:"),
-            chalk.green(findPackageInfo.name)
-          );
+        if (!findPackageInfo) {
           return;
         }
-        default: {
-          return;
-        }
+        await copyFilesToNodeModules([findPackageInfo]);
+        console.log(
+          chalk.blue("🔥 changed package:"),
+          chalk.green(findPackageInfo.name)
+        );
+        return;
       }
-    };
+      default: {
+        return;
+      }
+    }
+  };
+
+  targetWatchPath.forEach((watchPath) => {
     watch(watchPath).on("raw", debounce(watchFn, 3000));
   });
 };
 
 (async () => {
   if (process.argv.includes("-v") || process.argv.includes("--version")) {
-    console.log(chalk.blue("🔥 lopkg version", packagesJson.version));
+    console.log(chalk.blue("🔥 lopm version", packagesJson.version));
     return;
   } else if (process.argv.includes("-h") || process.argv.includes("--help")) {
     help();

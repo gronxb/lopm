@@ -1,14 +1,14 @@
-# lopkg
+# lopm
 
-[![NPM](https://img.shields.io/npm/v/@lopkg/cli)](https://www.npmjs.com/package/@lopkg/cli)
+[![NPM](https://img.shields.io/npm/v/@lopm/cli)](https://www.npmjs.com/package/@lopm/cli)
 
 Monorepo supports local packages.
 
-## Why use `lopkg`?
+## Why use `lopm`?
 
 When using local packages in a monorepo, you might experience peer dependency problems because you use symbolic links.
 
-But if you use `lopkg`, hard links the files declared in the `files` field in the `package.json`
+But if you use `lopm`, hard links the files declared in the `files` field in the `package.json`
 
 In other words, it has the same effect as a package installed by the npm registry.
 
@@ -17,18 +17,20 @@ In other words, it has the same effect as a package installed by the npm registr
 - local
 
 ```sh
-> pnpm add @lopkg/cli -D # or yarn / npm
-> pnpm lopkg -v
+> pnpm add @lopm/cli -D # or yarn / npm
+> pnpm lopm -v
 ```
 
 - global
 
 ```sh
-> pnpm add -g @lopkg/cli # or yarn global add @lopkg/cli / npm install -g @lopkg/cli
-> lopkg -v
+> pnpm add -g @lopm/cli # or yarn global add @lopm/cli / npm install -g @lopm/cli
+> lopm -v
 ```
 
-## `package.json` setting for local package
+## Getting Started
+
+### `package.json` setting for local package
 
 Specify `files` field to export out
 
@@ -44,9 +46,9 @@ Specify `files` field to export out
 ...
 ```
 
-## `package.json` setting for app
+### `package.json` setting for app
 
-After `pnpm install` or `yarn install`, synchronization must be performed through the `lopkg` command.  
+After `pnpm install` or `yarn install`, synchronization must be performed through the `lopm` command.  
 That is, it must be done immediately before build or development.
 
 - **example**
@@ -55,8 +57,8 @@ That is, it must be done immediately before build or development.
 "name": "bar"
 ...
 "scripts": {
-    "build": "lopkg && vite build",
-    "dev": "lopkg && vite"
+    "build": "lopm && vite build",
+    "dev": "lopm && vite"
 },
 ...
 ```
