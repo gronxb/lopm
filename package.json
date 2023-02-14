@@ -18,13 +18,11 @@
   "bin": {
     "lopkg": "./bin/index.cjs"
   },
-  "dependencies": {
+  "devDependencies": {
     "chokidar": "^3.5.3",
     "fs-extra": "^11.1.0",
     "lodash-es": "^4.17.21",
-    "workspace-tools": "^0.29.1"
-  },
-  "devDependencies": {
+    "workspace-tools": "^0.29.1",
     "@changesets/cli": "^2.26.0",
     "@types/fs-extra": "^11.0.1",
     "@types/jest": "^29.4.0",
