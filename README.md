@@ -1,6 +1,6 @@
 # lopm
 
-[![NPM](https://img.shields.io/npm/v/@lopm/cli)](https://www.npmjs.com/package/@lopm/cli)
+[![NPM](https://img.shields.io/npm/v/lopm)](https://www.npmjs.com/package/lopm)
 
 Monorepo supports local packages.
 
@@ -17,14 +17,14 @@ In other words, it has the same effect as a package installed by the npm registr
 - local
 
 ```sh
-> pnpm add @lopm/cli -D # or yarn / npm
+> pnpm add lopm -D -w # or yarn / npm
 > pnpm lopm -v
 ```
 
 - global
 
 ```sh
-> pnpm add -g @lopm/cli # or yarn global add @lopm/cli / npm install -g @lopm/cli
+> pnpm add -g lopm # or yarn global add lopm / npm install -g lopm
 > lopm -v
 ```
 
