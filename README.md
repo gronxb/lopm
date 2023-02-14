@@ -1,33 +1,41 @@
-# pkgm
+# lopkg
 
-[![NPM](https://img.shields.io/npm/v/@pkgm/cli)](https://www.npmjs.com/package/@pkgm/cli)
+[![NPM](https://img.shields.io/npm/v/@lopkg/cli)](https://www.npmjs.com/package/@lopkg/cli)
 
 Monorepo supports local packages.
 
-## Why use `pkgm`?
+## Why use `lopkg`?
 
 When using local packages in a monorepo, you might experience peer dependency problems because you use symbolic links.
 
-But if you use `pkgm`, hard links the files declared in the `files` field in the `package.json`  
+But if you use `lopkg`, hard links the files declared in the `files` field in the `package.json`
 
 In other words, it has the same effect as a package installed by the npm registry.
+
 ## Installation
-* local
+
+- local
+
 ```sh
-> pnpm add @pkgm/cli -D # or yarn / npm
-> pnpm pkgm -v
+> pnpm add @lopkg/cli -D # or yarn / npm
+> pnpm lopkg -v
 ```
-* global
+
+- global
+
 ```sh
-> pnpm add -g @pkgm/cli # or yarn global add @pkgm/cli / npm install -g @pkgm/cli
-> pkgm -v
+> pnpm add -g @lopkg/cli # or yarn global add @lopkg/cli / npm install -g @lopkg/cli
+> lopkg -v
 ```
 
 ## `package.json` setting for local package
+
 Specify `files` field to export out
-* **example**
+
+- **example**
+
 ```json
-"name": "A"
+"name": "foo"
 ...
 "files": [
     "dist",
@@ -37,20 +45,26 @@ Specify `files` field to export out
 ```
 
 ## `package.json` setting for app
-After `pnpm install` or `yarn install`, synchronization must be performed through the `pkgm` command.  
-That is, it must be done immediately before build or development.  
-* **example**
+
+After `pnpm install` or `yarn install`, synchronization must be performed through the `lopkg` command.  
+That is, it must be done immediately before build or development.
+
+- **example**
+
 ```json
 "name": "bar"
 ...
 "scripts": {
-    "build": "pkgm && vite build",
-    "dev": "pkgm && vite"
+    "build": "lopkg && vite build",
+    "dev": "lopkg && vite"
 },
 ...
 ```
+
 The `dependency` field must specify the package name and link keyword to use, and the path where the local package resides must be specified as the relative path.
-* **example**
+
+- **example**
+
 ```json
 "name": "bar"
 ...
@@ -61,6 +75,7 @@ The `dependency` field must specify the package name and link keyword to use, an
 ```
 
 If you followed the example above well, you can use it inside the `bar` package as follows:
+
 ```js
 // This code in "bar" package
 import { sum } from "foo";

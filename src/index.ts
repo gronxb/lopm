@@ -41,7 +41,7 @@ export const addPackage = () => {
 
 const help = () => {
   console.log("");
-  console.log(chalk.blue("$ [pnpm or yarn] localpkg <options>"));
+  console.log(chalk.blue("$ [pnpm or yarn] lopkg <options>"));
   console.log("");
   console.log(" options:");
   console.log("");
@@ -67,9 +67,9 @@ const init = async () => {
   if (!workspaceRoot) {
     throw new Error(chalk.red("🔥 Not Found workspace root"));
   }
-  const workspaceJsonPath = resolve(workspaceRoot, "pkgm.json");
-  const isPkgmJson = fs.pathExistsSync(workspaceJsonPath);
-  if (!isPkgmJson) {
+  const workspaceJsonPath = resolve(workspaceRoot, "lopkg.json");
+  const isLopkgJson = fs.pathExistsSync(workspaceJsonPath);
+  if (!isLopkgJson) {
     fs.writeJSONSync(
       workspaceJsonPath,
       {
@@ -137,7 +137,7 @@ const spawn = async (args: string[]) => {
 
 (async () => {
   if (process.argv.includes("-v") || process.argv.includes("--version")) {
-    console.log(chalk.blue("🔥 pkgm version", packagesJson.version));
+    console.log(chalk.blue("🔥 lopkg version", packagesJson.version));
     return;
   } else if (process.argv.includes("-h") || process.argv.includes("--help")) {
     help();

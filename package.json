@@ -1,5 +1,5 @@
 {
-  "name": "@pkgm/cli",
+  "name": "@lopkg/cli",
   "version": "1.0.0",
   "type": "module",
   "description": "Monorepo supports local packages",
@@ -16,7 +16,7 @@
   "author": "",
   "license": "ISC",
   "bin": {
-    "pkgm": "./bin/index.cjs"
+    "lopkg": "./bin/index.cjs"
   },
   "dependencies": {
     "chokidar": "^3.5.3",

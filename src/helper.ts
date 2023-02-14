@@ -111,12 +111,12 @@ export const getPackageManager = async (cwd: string) => {
     throw new Error(chalk.red("🔥 Not Found workspace root"));
   }
 
-  const pkgmJsonPath = resolve(workspaceRoot, "pkgm.json");
-  const isPkgm = await fs.pathExists(pkgmJsonPath);
-  if (isPkgm) {
-    const data = await fs.readFile(pkgmJsonPath, "utf8");
-    const pkgmJson = JSON.parse(data) as { packageManager: PackageManager };
-    return pkgmJson.packageManager;
+  const lopkgJsonPath = resolve(workspaceRoot, "lopkg.json");
+  const isLopkg = await fs.pathExists(lopkgJsonPath);
+  if (isLopkg) {
+    const data = await fs.readFile(lopkgJsonPath, "utf8");
+    const lopkgJson = JSON.parse(data) as { packageManager: PackageManager };
+    return lopkgJson.packageManager;
   }
 
   const yarnLockPath = resolve(workspaceRoot, "yarn.lock");
