@@ -4,6 +4,7 @@ specifiers:
   '@changesets/cli': ^2.26.0
   '@types/fs-extra': ^11.0.1
   '@types/jest': ^29.4.0
+  '@types/lodash-es': ^4.17.6
   '@types/node': ^18.11.19
   '@typescript-eslint/eslint-plugin': ^5.50.0
   '@typescript-eslint/parser': ^5.50.0
@@ -12,6 +13,7 @@ specifiers:
   esbuild: ^0.17.5
   fs-extra: ^11.1.0
   jest: ^29.4.2
+  lodash-es: ^4.17.21
   ts-jest: ^29.0.5
   ts-node: ^10.9.1
   type-fest: ^3.5.5
@@ -21,12 +23,14 @@ specifiers:
 dependencies:
   chokidar: 3.5.3
   fs-extra: 11.1.0
+  lodash-es: 4.17.21
   workspace-tools: 0.29.1
 
 devDependencies:
   '@changesets/cli': 2.26.0
   '@types/fs-extra': 11.0.1
   '@types/jest': 29.4.0
+  '@types/lodash-es': 4.17.6
   '@types/node': 18.11.19
   '@typescript-eslint/eslint-plugin': 5.50.0_2axpbiyvmynb7ce7q5mdvrd2mu
   '@typescript-eslint/parser': 5.50.0_typescript@4.9.5
@@ -1199,6 +1203,16 @@ packages:
     resolution: {integrity: sha512-GSgiRCVeapDN+3pqA35IkQwasaCh/0YFH5dEF6S88iDvEn901DjOeH3/QPY+XYP1DFzDZPvIvfeEgk+7br5png==}
     dependencies:
       '@types/node': 18.11.19
+    dev: true
+
+  /@types/lodash-es/4.17.6:
+    resolution: {integrity: sha512-R+zTeVUKDdfoRxpAryaQNRKk3105Rrgx2CFRClIgRGaqDTdjsm8h6IYA8ir584W3ePzkZfst5xIgDwYrlh9HLg==}
+    dependencies:
+      '@types/lodash': 4.14.191
+    dev: true
+
+  /@types/lodash/4.14.191:
+    resolution: {integrity: sha512-BdZ5BCCvho3EIXw6wUCXHe7rS53AIDPLE+JzwgT+OsJk53oBfbSmZZ7CX4VaRoN78N+TJpFi9QPlfIVNmJYWxQ==}
     dev: true
 
   /@types/minimist/1.2.2:
@@ -3161,6 +3175,10 @@ packages:
     dependencies:
       p-locate: 5.0.0
     dev: true
+
+  /lodash-es/4.17.21:
+    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
+    dev: false
 
   /lodash.memoize/4.1.2:
     resolution: {integrity: sha512-t7j+NzmgnQzTAYXcsHYLgimltOV1MXHtlOWf6GjL9Kj8GK5FInw5JotxvbOs+IvV1/Dzo04/fCGfLVs7aXb4Ag==}

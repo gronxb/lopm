@@ -14,6 +14,7 @@ import chalk from "chalk";
 import { getWorkspaceRoot } from "workspace-tools";
 import childProcess from "child_process";
 import { watch } from "chokidar";
+import { debounce } from "lodash-es";
 
 export const sync = async () => {
   const linkFields = await getLinkFields();
@@ -103,22 +104,37 @@ const spawn = async (args: string[]) => {
     )
     .flat();
 
-  targetWatchPath.forEach((path) => {
-    watch(path).on("change", async (path) => {
-      const findPackageInfo = packagesInfo.find((packageInfo) =>
-        path.includes(resolve(currentPath, packageInfo.path))
-      );
+  targetWatchPath.forEach((watchPath) => {
+    const watchFn = async (
+      eventName: "add" | "addDir" | "change" | "unlink" | "unlinkDir",
+      path: string,
+      stats?: fs.Stats
+    ) => {
+      switch (eventName) {
+        case "change": {
+          const findPackageInfo = packagesInfo.find((packageInfo) =>
+            path.includes(resolve(currentPath, packageInfo.path))
+          );
 
-      if (!findPackageInfo) {
-        return;
+          if (!findPackageInfo) {
+            return;
+          }
+          await copyFilesToNodeModules([findPackageInfo]);
+          console.log(
+            chalk.blue("🔥 changed package:"),
+            chalk.green(findPackageInfo.name)
+          );
+          return;
+        }
+        default: {
+          return;
+        }
       }
-      await unlinkAlreadyModules([findPackageInfo]);
-      await copyFilesToNodeModules([findPackageInfo]);
-      console.log(
-        chalk.blue("🔥 changed package:"),
-        chalk.green(findPackageInfo?.name)
-      );
-    });
+    };
+    // watch(watchPath).on("add" | "addDir" | "change",debounce(watchFn, 3000));
+    // watch(watchPath).on("all", debounce(watchFn, 3000));
+    watch(watchPath).on("raw", debounce(watchFn, 3000));
+    // watch(watchPath).on("unlinkDir", watchFn);
   });
 };
 

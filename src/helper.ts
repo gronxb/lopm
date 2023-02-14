@@ -96,12 +96,10 @@ export const copyFilesToNodeModules = async (
         packageInfo.name,
         file
       );
+      console.log(targetPath, "to", descPath);
       await fs.copy(targetPath, descPath, {
         overwrite: true,
       });
-
-      const relativeTargetPath = relative(currentPath, targetPath);
-      const relativeDescPath = relative(currentPath, descPath);
     }
   }
 };
