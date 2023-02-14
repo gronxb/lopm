@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "type": "module",
   "description": "Monorepo supports local packages",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gron1gh1/lopm.git"
+  },
   "files": [
     "bin",
     "package.json"
