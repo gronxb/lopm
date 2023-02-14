@@ -106,8 +106,7 @@ const spawn = async (args: string[]) => {
 
   const watchFn = async (
     eventName: "add" | "addDir" | "change" | "unlink" | "unlinkDir",
-    path: string,
-    stats?: fs.Stats
+    path: string
   ) => {
     switch (eventName) {
       case "change": {

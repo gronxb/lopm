@@ -1,6 +1,6 @@
 {
   "name": "lopm",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "description": "Monorepo supports local packages",
   "repository": {
@@ -22,8 +22,10 @@
   "bin": {
     "lopm": "./bin/index.cjs"
   },
+  "dependencies": {
+    "chokidar": "^3.5.3"
+  },
   "devDependencies": {
-    "chokidar": "^3.5.3",
     "fs-extra": "^11.1.0",
     "lodash-es": "^4.17.21",
     "workspace-tools": "^0.29.1",

@@ -6,7 +6,3 @@ export type LocalPackageInfo = {
 };
 
 export type PackageManager = "pnpm" | "yarn";
-
-export type HelperOptions = {
-  log: boolean;
-};

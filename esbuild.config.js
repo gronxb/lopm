@@ -1,11 +1,12 @@
 import { build } from "esbuild";
+import pkg from "./package.json" assert { type: "json" };
 
 build({
   entryPoints: ["./src/index.ts"],
   bundle: true,
   minify: true,
   format: "cjs",
-  external: ["fsevents"],
+  external: Object.keys(pkg.dependencies),
   platform: "node",
   outfile: "./bin/index.cjs",
 });

@@ -1,14 +1,9 @@
-import { resolve, relative, normalize } from "path";
+import { resolve, normalize } from "path";
 import * as fs from "fs-extra";
 import chalk from "chalk";
 
 import type { PackageJson } from "type-fest";
-import type {
-  LocalPackageInfo,
-  LinkField,
-  PackageManager,
-  HelperOptions,
-} from "./type";
+import type { LocalPackageInfo, LinkField, PackageManager } from "./type";
 import { getWorkspaceRoot } from "workspace-tools";
 
 export const currentPath = process.cwd();
