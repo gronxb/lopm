@@ -131,10 +131,7 @@ const spawn = async (args: string[]) => {
         }
       }
     };
-    // watch(watchPath).on("add" | "addDir" | "change",debounce(watchFn, 3000));
-    // watch(watchPath).on("all", debounce(watchFn, 3000));
     watch(watchPath).on("raw", debounce(watchFn, 3000));
-    // watch(watchPath).on("unlinkDir", watchFn);
   });
 };
 
