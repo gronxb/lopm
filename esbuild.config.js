@@ -5,6 +5,7 @@ build({
   entryPoints: ["./src/index.ts"],
   bundle: true,
   minify: true,
+  sourcemap: true,
   format: "cjs",
   external: Object.keys(pkg.dependencies),
   platform: "node",
