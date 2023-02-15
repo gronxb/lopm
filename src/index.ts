@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+import "source-map-support/register";
+
 import * as fs from "fs-extra";
 import { resolve } from "path";
 import {
@@ -104,11 +106,9 @@ const spawn = async (args: string[]) => {
     )
     .flat();
 
-  const watchFn = async (
-    eventName: "add" | "addDir" | "change" | "unlink" | "unlinkDir",
-    path: string
-  ) => {
+  const watchFn = debounce(async (eventName: string, path: string) => {
     switch (eventName) {
+      case "modified":
       case "change": {
         const findPackageInfo = packagesInfo.find((packageInfo) =>
           path.includes(resolve(currentPath, packageInfo.path))
@@ -117,6 +117,7 @@ const spawn = async (args: string[]) => {
         if (!findPackageInfo) {
           return;
         }
+
         await copyFilesToNodeModules([findPackageInfo]);
         console.log(
           chalk.blue("🔥 changed package:"),
@@ -128,10 +129,14 @@ const spawn = async (args: string[]) => {
         return;
       }
     }
-  };
+  }, 3000);
 
   targetWatchPath.forEach((watchPath) => {
-    watch(watchPath).on("raw", debounce(watchFn, 3000));
+    watch(watchPath, {
+      awaitWriteFinish: true,
+      atomic: false,
+      followSymlinks: false,
+    }).on("raw", watchFn);
   });
 };
 

@@ -94,6 +94,7 @@ export const copyFilesToNodeModules = async (
 
       await fs.copy(targetPath, descPath, {
         overwrite: true,
+        dereference: true,
       });
     }
   }
