@@ -1,6 +1,6 @@
 {
   "name": "lopm",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "type": "module",
   "description": "Monorepo supports local packages",
   "repository": {
@@ -51,5 +51,5 @@
   "peerDependencies": {
     "chokidar": ">=3.5.3"
   },
-  "packageManager": "pnpm@7.26.0"
+  "packageManager": "pnpm@7.29.1"
 }
