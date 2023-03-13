@@ -8,14 +8,14 @@ import { getWorkspaceRoot } from "workspace-tools";
 
 export const currentPath = process.cwd();
 
-export const readPackagesJson = async (path: string) => {
+export const readPackageJson = async (path: string) => {
   const data = await fs.readFile(path, "utf8");
   return JSON.parse(data) as PackageJson;
 };
 
 export const getLinkFields = async () => {
   try {
-    const packageJson = await readPackagesJson(resolve("package.json"));
+    const packageJson = await readPackageJson(resolve("package.json"));
     if (!packageJson.dependencies) {
       throw new Error(
         chalk.red("🔥 Not Found 'dependencies' field in package.json")
@@ -42,12 +42,12 @@ export const getLinkFields = async () => {
   }
 };
 
-export const getLocalPackagesInfo: (
+export const getLocalPackageInfos: (
   linkFields: LinkField[]
 ) => Promise<LocalPackageInfo[]> = async (linkFields) => {
   return Promise.all(
     linkFields.map(async (linkField) => {
-      const packageJson = await readPackagesJson(
+      const packageJson = await readPackageJson(
         resolve(linkField.path, "package.json")
       );
 
@@ -75,28 +75,24 @@ export const unlinkAlreadyModules = async (
   }
 };
 
-export const copyFilesToNodeModules = async (
-  packagesInfo: LocalPackageInfo[]
-) => {
-  for (const packageInfo of packagesInfo) {
-    if (!packageInfo.files) {
-      throw new Error(chalk.red("🔥 Not Found 'files' field in package.json"));
-    }
+export const copyFilesToNodeModules = async (packageInfo: LocalPackageInfo) => {
+  if (!packageInfo.files) {
+    throw new Error(chalk.red("🔥 Not Found 'files' field in package.json"));
+  }
 
-    for (const file of packageInfo.files) {
-      const targetPath = resolve(packageInfo.path, file);
-      const descPath = resolve(
-        currentPath,
-        "node_modules",
-        packageInfo.name,
-        file
-      );
+  for (const file of packageInfo.files) {
+    const targetPath = resolve(packageInfo.path, file);
+    const descPath = resolve(
+      currentPath,
+      "node_modules",
+      packageInfo.name,
+      file
+    );
 
-      await fs.copy(targetPath, descPath, {
-        overwrite: true,
-        dereference: true,
-      });
-    }
+    await fs.copy(targetPath, descPath, {
+      overwrite: true,
+      dereference: true,
+    });
   }
 };
 
@@ -107,12 +103,16 @@ export const getPackageManager = async (cwd: string) => {
     throw new Error(chalk.red("🔥 Not Found workspace root"));
   }
 
-  const lopmJsonPath = resolve(workspaceRoot, "lopm.json");
-  const isLopm = await fs.pathExists(lopmJsonPath);
-  if (isLopm) {
-    const data = await fs.readFile(lopmJsonPath, "utf8");
-    const lopmJson = JSON.parse(data) as { packageManager: PackageManager };
-    return lopmJson.packageManager;
+  const packageJson = await readPackageJson(
+    resolve(workspaceRoot, "package.json")
+  );
+  if (packageJson.packageManager) {
+    const packageManager = packageJson.packageManager.split("@")[0];
+    switch (packageManager) {
+      case "yarn":
+      case "pnpm":
+        return packageManager;
+    }
   }
 
   const yarnLockPath = resolve(workspaceRoot, "yarn.lock");
@@ -128,3 +128,5 @@ export const getPackageManager = async (cwd: string) => {
   }
   return null;
 };
+
+export const noop = () => {};
