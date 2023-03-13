@@ -12,6 +12,7 @@ But if you use `lopm`, hard links the files declared in the `files` field in the
 
 In other words, it has the same effect as a package installed by the npm registry.
 
+It is similar to [dependenciesMeta.*.injected](https://pnpm.io/package_json#dependenciesmeta) of pnpm, but sync is difficult periodically at current pnpm and does not support watch mode.
 ## Installation
 
 - local
@@ -48,17 +49,20 @@ Specify `files` field to export out
 
 ### `package.json` setting for app
 
-After `pnpm install` or `yarn install`, synchronization must be performed through the `lopm` command.  
+After `pnpm install` or `yarn install`, synchronization must be performed through the `lopm sync` command.  
 That is, it must be done immediately before build or development.
 
-- **example**
+The `lopm run <command>` command is in surveillance mode. Hard link again if any changes to the local package occur while the command is running.
 
+The command `pnpm install` or `yarn install` will restore it.
+
+- **example**
 ```json
 "name": "bar"
 ...
 "scripts": {
-    "build": "lopm && vite build",
-    "dev": "lopm && vite"
+    "build": "lopm sync && vite build",
+    "dev": "lopm run vite"
 },
 ...
 ```
