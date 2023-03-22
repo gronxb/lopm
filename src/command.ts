@@ -101,18 +101,28 @@ export const showList = (cwd: string) => {
   const localPackages = getLocalPackages(cwd);
 
   log("Using Local Dependencies");
-  localDependencies.forEach(({ name }) => {
-    console.log(chalk.green("-", name));
-  });
+  if (localDependencies.length === 0) {
+    localDependencies.forEach(({ name }) => {
+      console.log(chalk.green("-", name));
+    });
+  } else {
+    console.log(chalk.red("Not Found"));
+  }
 
   console.log("");
 
   log("Available Local Packages");
-  localPackages.forEach(({ name }) => {
-    const isDependency = localDependencies.some(
-      (localDependency) => localDependency.name === name
-    );
+  if (localPackages.length === 0) {
+    localPackages.forEach(({ name }) => {
+      const isDependency = localDependencies.some(
+        (localDependency) => localDependency.name === name
+      );
 
-    console.log(isDependency ? chalk.green("-", name) : ["-", name].join(" "));
-  });
+      console.log(
+        isDependency ? chalk.green("-", name) : ["-", name].join(" ")
+      );
+    });
+  } else {
+    console.log(chalk.red("Not Found"));
+  }
 };
