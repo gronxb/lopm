@@ -14,7 +14,7 @@
   "scripts": {
     "build": "node esbuild.config.js",
     "test": "jest",
-    "publish": "changeset publish"
+    "changeset:publish": "node esbuild.config.js && changeset publish"
   },
   "keywords": [],
   "author": "",
