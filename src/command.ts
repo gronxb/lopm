@@ -1,32 +1,35 @@
 import * as fs from "fs-extra";
 import { resolve } from "path";
 import {
-  copyFilesToNodeModules,
-  currentPath,
   getLocalPackageInfos,
   getLinkFields,
   getPackageManager,
-  unlinkAlreadyModules,
-} from "./helper";
-import chalk from "chalk";
+} from "./utils/package";
+
+import { copyFilesToNodeModules, unlinkAlreadyModules } from "./utils/module";
 
 import childProcess from "child_process";
 import { watch } from "chokidar";
 import debounce from "lodash-es/debounce";
+import { log } from "./utils/log";
 
 export const sync = async () => {
   const linkFields = await getLinkFields();
+  if (linkFields.length === 0) {
+    throw new Error("Not Found link field in package.json");
+  }
+
   linkFields.forEach(({ name }) => {
-    console.log(chalk.blue("🔥 find local package:"), chalk.green(name));
+    log("find local package:", name);
   });
 
   const packageInfos = await getLocalPackageInfos(linkFields);
 
   const isNodeModules = await fs.pathExists(
-    resolve(currentPath, "node_modules")
+    resolve(process.cwd(), "node_modules")
   );
   if (!isNodeModules) {
-    await fs.mkdir(resolve(currentPath, "node_modules"));
+    await fs.mkdir(resolve(process.cwd(), "node_modules"));
   }
 
   await unlinkAlreadyModules(packageInfos);
@@ -35,39 +38,22 @@ export const sync = async () => {
   );
 };
 
-export const addPackage = () => {
-  console.log("🔥 Not Yet");
-};
-
-export const help = () => {
-  console.log("");
-  console.log(chalk.blue("$ [pnpm or yarn] lopm <options>"));
-  console.log("");
-  console.log(" options:");
-  console.log("");
-  console.log("   version:       Shows this package version");
-  console.log(
-    "   sync:          Hard links the files declared in the `files` field in the `package.json`"
-  );
-  console.log(
-    "   add <pkg>:     Added a local package with the link value in the `dependencies` field. It is then hard-linked"
-  );
-  console.log(
-    "   run <command>:     The command entered in the parameter is executed. Local packages found during execution are placed in watch mode, and 'sync' commands are executed when they change."
-  );
-  console.log("");
-};
-
 export const spawn = async (args: string[]) => {
-  const packageManager = await getPackageManager(currentPath);
+  const packageManager = await getPackageManager(process.cwd());
   if (!packageManager) {
-    new Error(chalk.red("🔥 Not Found package manager"));
+    new Error("Not Found package manager");
     return;
   }
   await sync();
+
   const child = childProcess.spawn(packageManager, args, {
     stdio: "inherit",
   });
+
+  child.on("SIGINT", (code: number) => {
+    process.exit(code);
+  });
+
   child.on("close", (code: number) => {
     process.exit(code);
   });
@@ -80,16 +66,14 @@ export const spawn = async (args: string[]) => {
       if (
         eventName === "unlink" ||
         eventName === "unlinkDir" ||
-        !path.includes(resolve(currentPath, packageInfo.path))
+        !path.includes(resolve(process.cwd(), packageInfo.path))
       ) {
         return;
       }
 
       await copyFilesToNodeModules(packageInfo);
-      console.log(
-        chalk.blue("🔥 changed package:"),
-        chalk.green(packageInfo.name)
-      );
+
+      log("changed package:", packageInfo.name);
     }, 3000);
 
     return {
@@ -100,7 +84,7 @@ export const spawn = async (args: string[]) => {
     };
   });
 
-  targetWatches.forEach(({ name, watchedPath, watchFn }) => {
+  targetWatches.forEach(({ watchedPath, watchFn }) => {
     watch(watchedPath, {
       atomic: 3000,
       ignoreInitial: true,

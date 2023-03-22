@@ -1,35 +1,44 @@
 #!/usr/bin/env node
 import "source-map-support/register";
 
-import packagesJson from "../package.json";
-import chalk from "chalk";
-import { addPackage, help, spawn, sync } from "./command";
+import { spawn, sync } from "./command";
 
-(async () => {
-  const prefix = process.argv.length > 2 ? process.argv[2] : "";
-  const commands = process.argv.slice(3);
+import { Command } from "commander";
+import { version as packageVersion } from "../package.json";
 
-  switch (prefix) {
-    case "version": {
-      console.log(chalk.blue("🔥 lopm version", packagesJson.version));
-      return;
-    }
-    case "add": {
-      await addPackage();
-      return;
-    }
-    case "sync": {
+const program = new Command();
+
+program
+  .name("lopm")
+  .description("CLI to Support Monorepo for local packages")
+  .version(packageVersion, "-v, --version", "output the current version");
+
+program
+  .command("sync")
+  .description(
+    "Hard links the files declared in the `files` field in the `package.json`"
+  )
+  .action(async () => {
+    try {
       await sync();
-      return;
+    } catch (e) {
+      console.error(e);
     }
-    case "run": {
+  });
+
+program
+  .command("run")
+  .argument("<command>", "string to split")
+  .description(
+    "The command entered in the parameter is executed. Local packages found during execution are placed in watch mode, and 'sync' commands are executed when they change."
+  )
+  .action(async () => {
+    try {
+      const commands = program.args.slice(1);
       await spawn(commands);
-      return;
+    } catch (e) {
+      console.error(e);
     }
-    default:
-    case "help": {
-      help();
-      return;
-    }
-  }
-})();
+  });
+
+program.parse();
