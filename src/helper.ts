@@ -16,13 +16,11 @@ export const readPackageJson = async (path: string) => {
 export const getLinkFields = async () => {
   try {
     const packageJson = await readPackageJson(resolve("package.json"));
-    if (!packageJson.dependencies) {
-      throw new Error(
-        chalk.red("🔥 Not Found 'dependencies' field in package.json")
-      );
-    }
 
-    const linkPackages = Object.entries(packageJson.dependencies)
+    const linkPackages = [
+      ...Object.entries(packageJson?.dependencies ?? {}),
+      ...Object.entries(packageJson?.devDependencies ?? {}),
+    ]
       .filter(([_, value]) => {
         if (value!.startsWith("link")) {
           return true;
@@ -36,9 +34,7 @@ export const getLinkFields = async () => {
 
     return linkPackages as LinkField[];
   } catch (e) {
-    throw new Error(
-      chalk.red("🔥 No linked 'dependencies' field found in package.json")
-    );
+    throw new Error(chalk.red(e));
   }
 };
 
