@@ -2,7 +2,7 @@
   "name": "lopm",
   "version": "1.0.5",
   "type": "module",
-  "description": "Monorepo supports local packages",
+  "description": "CLI to Support Monorepo for local packages",
   "repository": {
     "type": "git",
     "url": "https://github.com/gron1gh1/lopm.git"
@@ -14,11 +14,20 @@
   "scripts": {
     "build": "node esbuild.config.js",
     "test": "jest",
-    "publish": "changeset publish"
+    "changeset:publish": "node esbuild.config.js && changeset publish"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "lopm",
+    "yarn",
+    "pnpm",
+    "yarn-workspace",
+    "pnpm-workspace",
+    "workspace",
+    "monorepo",
+    "local-package"
+  ],
+  "author": "gron1gh1 <gron1gh1@gmail.com>",
+  "license": "MIT",
   "bin": {
     "lopm": "./bin/index.cjs"
   },
@@ -26,6 +35,7 @@
     "chokidar": "^3.5.3"
   },
   "devDependencies": {
+    "commander": "^10.0.0",
     "@changesets/cli": "^2.26.0",
     "@types/fs-extra": "^11.0.1",
     "@types/jest": "^29.4.0",
@@ -51,5 +61,5 @@
   "peerDependencies": {
     "chokidar": ">=3.5.3"
   },
-  "packageManager": "pnpm@7.29.1"
+  "packageManager": "pnpm@7.30.0"
 }
