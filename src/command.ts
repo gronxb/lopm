@@ -1,10 +1,10 @@
 import * as fs from "fs-extra";
 import { resolve } from "path";
 import {
-  getLocalPackageInfos,
-  getLinkFields,
+  getLocalPackages,
+  getLocalDependencies,
   getPackageManager,
-} from "./utils/package";
+} from "./utils/workspace";
 
 import { copyFilesToNodeModules, unlinkAlreadyModules } from "./utils/module";
 
@@ -12,39 +12,42 @@ import childProcess from "child_process";
 import { watch } from "chokidar";
 import debounce from "lodash-es/debounce";
 import { log } from "./utils/log";
+import chalk from "chalk";
 
-export const sync = async () => {
-  const linkFields = await getLinkFields();
-  if (linkFields.length === 0) {
-    throw new Error("Not Found link field in package.json");
+export const sync = async (cwd: string) => {
+  const localDependencies = getLocalDependencies(cwd);
+  if (localDependencies.length === 0) {
+    throw new Error("Not Found local dependencies");
   }
 
-  linkFields.forEach(({ name }) => {
+  localDependencies.forEach(({ name }) => {
     log("find local package:", name);
   });
 
-  const packageInfos = await getLocalPackageInfos(linkFields);
-
-  const isNodeModules = await fs.pathExists(
-    resolve(process.cwd(), "node_modules")
-  );
+  const isNodeModules = await fs.pathExists(resolve(cwd, "node_modules"));
   if (!isNodeModules) {
-    await fs.mkdir(resolve(process.cwd(), "node_modules"));
+    await fs.mkdir(resolve(cwd, "node_modules"));
   }
 
-  await unlinkAlreadyModules(packageInfos);
+  await unlinkAlreadyModules(cwd, localDependencies);
   await Promise.all(
-    packageInfos.map((packageInfo) => copyFilesToNodeModules(packageInfo))
+    localDependencies.map((localDependency) =>
+      copyFilesToNodeModules(cwd, localDependency)
+    )
   );
+
+  console.log(chalk.green("🔥 Done"));
 };
 
-export const spawn = async (args: string[]) => {
-  const packageManager = await getPackageManager(process.cwd());
+export const spawn = async (cwd: string, args: string[]) => {
+  const packageManager = getPackageManager(cwd);
+
   if (!packageManager) {
     new Error("Not Found package manager");
     return;
   }
-  await sync();
+
+  await sync(cwd);
 
   const child = childProcess.spawn(packageManager, args, {
     stdio: "inherit",
@@ -58,28 +61,29 @@ export const spawn = async (args: string[]) => {
     process.exit(code);
   });
 
-  const linkFields = await getLinkFields();
-  const packageInfos = await getLocalPackageInfos(linkFields);
+  const localDependencies = getLocalDependencies(cwd);
 
-  const targetWatches = packageInfos.map((packageInfo) => {
+  const targetWatches = localDependencies.map((localDependency) => {
     const watchFn = debounce(async (eventName: string, path: string) => {
       if (
         eventName === "unlink" ||
         eventName === "unlinkDir" ||
-        !path.includes(resolve(process.cwd(), packageInfo.path))
+        !path.includes(resolve(cwd, localDependency.path))
       ) {
         return;
       }
 
-      await copyFilesToNodeModules(packageInfo);
+      await copyFilesToNodeModules(cwd, localDependency);
 
-      log("changed package:", packageInfo.name);
+      log("changed package:", localDependency.name);
     }, 3000);
 
     return {
-      name: packageInfo.name,
+      name: localDependency.name,
       watchedPath:
-        packageInfo.files?.map((file) => resolve(packageInfo.path, file)) ?? [],
+        localDependency.packageJson.files?.map((file: string) =>
+          resolve(localDependency.path, file)
+        ) ?? [],
       watchFn,
     };
   });
@@ -89,5 +93,26 @@ export const spawn = async (args: string[]) => {
       atomic: 3000,
       ignoreInitial: true,
     }).on("all", watchFn);
+  });
+};
+
+export const showList = (cwd: string) => {
+  const localDependencies = getLocalDependencies(cwd);
+  const localPackages = getLocalPackages(cwd);
+
+  log("Using Local Dependencies");
+  localDependencies.forEach(({ name }) => {
+    console.log(chalk.green("-", name));
+  });
+
+  console.log("");
+
+  log("Available Local Packages");
+  localPackages.forEach(({ name }) => {
+    const isDependency = localDependencies.some(
+      (localDependency) => localDependency.name === name
+    );
+
+    console.log(isDependency ? chalk.green("-", name) : ["-", name].join(" "));
   });
 };

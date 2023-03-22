@@ -1,35 +1,35 @@
-import { LocalPackageInfo } from "../type";
 import * as fs from "fs-extra";
 import { normalize, resolve } from "path";
+import type { WorkspaceInfo } from "workspace-tools";
+import { Workspace } from "../types";
 
 export const unlinkAlreadyModules = async (
-  packagesInfo: LocalPackageInfo[]
+  cwd: string,
+  workspaceInfo: WorkspaceInfo
 ) => {
   const alreadyModules = new Set(
-    packagesInfo.map((packageInfo) => packageInfo.name)
+    workspaceInfo.map((workspace) => workspace.name)
   );
 
-  for (const module of alreadyModules) {
-    await fs.rm(normalize(resolve(process.cwd(), "node_modules", module)), {
+  for (const alreadyModule of alreadyModules) {
+    await fs.rm(normalize(resolve(cwd, "node_modules", alreadyModule)), {
       recursive: true,
       force: true,
     });
   }
 };
 
-export const copyFilesToNodeModules = async (packageInfo: LocalPackageInfo) => {
-  if (!packageInfo.files) {
+export const copyFilesToNodeModules = async (
+  cwd: string,
+  { path, packageJson }: Workspace
+) => {
+  if (!packageJson.files) {
     throw new Error("Not Found 'files' field in package.json");
   }
 
-  for (const file of packageInfo.files) {
-    const targetPath = resolve(packageInfo.path, file);
-    const descPath = resolve(
-      process.cwd(),
-      "node_modules",
-      packageInfo.name,
-      file
-    );
+  for (const file of packageJson.files) {
+    const targetPath = resolve(path, file);
+    const descPath = resolve(cwd, "node_modules", packageJson.name, file);
 
     await fs.copy(targetPath, descPath, {
       overwrite: true,
