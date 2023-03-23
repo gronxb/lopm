@@ -100,7 +100,7 @@ export const showList = (cwd: string) => {
   const localPackages = getLocalPackages(cwd);
 
   log("Using Local Dependencies");
-  if (localDependencies.length === 0) {
+  if (localDependencies.length > 0) {
     localDependencies.forEach(({ name }) => {
       console.log(pc.green(`- ${name}`));
     });
@@ -111,7 +111,7 @@ export const showList = (cwd: string) => {
   console.log("");
 
   log("Available Local Packages");
-  if (localPackages.length === 0) {
+  if (localPackages.length > 0) {
     localPackages.forEach(({ name }) => {
       const isDependency = localDependencies.some(
         (localDependency) => localDependency.name === name
