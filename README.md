@@ -32,6 +32,17 @@ It is similar to [dependenciesMeta.*.injected](https://pnpm.io/package_json#depe
 ## Command
 * `list`  
    Displays a list of available local packages and local packages specified in the current project.
+   
+    <img width="454" alt="image" src="https://user-images.githubusercontent.com/41789633/227215772-258d7902-92da-423a-a0bb-3b6742656f3d.png">
+```json
+{
+  "name": "foo",
+  "dependencies": {
+      "bar": "workspace:^1.0.0",
+      "bar2": "workspace:^1.0.0"
+  }
+}
+```
 * `sync`  
    Hardlink the local packages.
 * `run`  
