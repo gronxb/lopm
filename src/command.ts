@@ -8,7 +8,7 @@ import {
 
 import { copyFilesToNodeModules, unlinkAlreadyModules } from "./utils/module";
 
-import childProcess from "child_process";
+import { spawn as childProcessSpawn } from "child_process";
 import { watch } from "chokidar";
 import debounce from "lodash-es/debounce";
 import { log } from "./utils/log";
@@ -49,7 +49,7 @@ export const spawn = async (cwd: string, args: string[]) => {
 
   await sync(cwd);
 
-  const child = childProcess.spawn(packageManager, args, {
+  const child = childProcessSpawn(packageManager, args, {
     stdio: "inherit",
   });
 
