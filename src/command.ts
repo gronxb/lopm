@@ -2,7 +2,7 @@ import chalk from "chalk";
 import { spawn as childProcessSpawn } from "child_process";
 import { watch } from "chokidar";
 import * as fs from "fs-extra";
-import debounce from "lodash-es/debounce";
+import debounce from "lodash.debounce";
 import { resolve } from "path";
 
 import { log } from "./utils/log";

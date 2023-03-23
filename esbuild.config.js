@@ -8,7 +8,9 @@ build({
   minify: true,
   sourcemap: true,
   format: "cjs",
-  external: Object.keys({ ...pkg.dependencies, ...pkg.devDependencies }),
+  external: Object.keys({ ...pkg.dependencies, ...pkg.devDependencies }).filter(
+    (name) => !["chalk"].includes(name)
+  ),
   platform: "node",
   outfile: "./bin/index.cjs",
 });
