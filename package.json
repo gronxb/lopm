@@ -1,6 +1,6 @@
 {
   "name": "lopm",
-  "version": "1.0.5",
+  "version": "1.1.1",
   "type": "module",
   "description": "CLI to Support Monorepo for local packages",
   "repository": {
