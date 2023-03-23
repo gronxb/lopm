@@ -1,9 +1,9 @@
-import chalk from "chalk";
 import { spawn as childProcessSpawn } from "child_process";
 import { watch } from "chokidar";
 import * as fs from "fs-extra";
 import debounce from "lodash.debounce";
 import { resolve } from "path";
+import pc from "picocolors";
 
 import { log } from "./utils/log";
 import { copyFilesToNodeModules, unlinkAlreadyModules } from "./utils/module";
@@ -35,7 +35,7 @@ export const sync = async (cwd: string) => {
     )
   );
 
-  console.log(chalk.green("🔥 Done"));
+  console.log(pc.green("🔥 Done"));
 };
 
 export const spawn = async (cwd: string, args: string[]) => {
@@ -102,10 +102,10 @@ export const showList = (cwd: string) => {
   log("Using Local Dependencies");
   if (localDependencies.length === 0) {
     localDependencies.forEach(({ name }) => {
-      console.log(chalk.green("-", name));
+      console.log(pc.green(`- ${name}`));
     });
   } else {
-    console.log(chalk.red("Not Found"));
+    console.log(pc.red("Not Found"));
   }
 
   console.log("");
@@ -117,11 +117,9 @@ export const showList = (cwd: string) => {
         (localDependency) => localDependency.name === name
       );
 
-      console.log(
-        isDependency ? chalk.green("-", name) : ["-", name].join(" ")
-      );
+      console.log(isDependency ? pc.green(`- ${name}`) : `- ${name}`);
     });
   } else {
-    console.log(chalk.red("Not Found"));
+    console.log(pc.red("Not Found"));
   }
 };
