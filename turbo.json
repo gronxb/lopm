@@ -1,0 +1,14 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "pipeline": {
+    "build": {
+      "outputs": ["bin/**"]
+    },
+    "test": {
+      "dependsOn": ["test:type", "build"]
+    },
+    "publish": {
+      "dependsOn": ["build", "test"]
+    }
+  }
+}
