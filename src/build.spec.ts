@@ -1,5 +1,6 @@
 import { exec } from "child_process";
 import { join } from "path";
+
 import { version } from "../package.json";
 
 jest.setTimeout(10000);

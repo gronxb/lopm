@@ -5,10 +5,10 @@
       "outputs": ["bin/**"]
     },
     "test": {
-      "dependsOn": ["test:type", "build"]
+      "dependsOn": ["build", "lint", "test:type"]
     },
     "publish": {
-      "dependsOn": ["build", "test"]
+      "dependsOn": ["test"]
     }
   }
 }

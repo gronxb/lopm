@@ -1,18 +1,17 @@
-import * as fs from "fs-extra";
-import { resolve } from "path";
-import {
-  getLocalPackages,
-  getLocalDependencies,
-  getPackageManager,
-} from "./utils/workspace";
-
-import { copyFilesToNodeModules, unlinkAlreadyModules } from "./utils/module";
-
+import chalk from "chalk";
 import { spawn as childProcessSpawn } from "child_process";
 import { watch } from "chokidar";
+import * as fs from "fs-extra";
 import debounce from "lodash-es/debounce";
+import { resolve } from "path";
+
 import { log } from "./utils/log";
-import chalk from "chalk";
+import { copyFilesToNodeModules, unlinkAlreadyModules } from "./utils/module";
+import {
+  getLocalDependencies,
+  getLocalPackages,
+  getPackageManager,
+} from "./utils/workspace";
 
 export const sync = async (cwd: string) => {
   const localDependencies = getLocalDependencies(cwd);

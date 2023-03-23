@@ -1,5 +1,4 @@
 import { ChildProcess, spawn } from "child_process";
-
 import EventEmitter from "events";
 import { Readable } from "stream";
 

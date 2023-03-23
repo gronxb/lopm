@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 import "source-map-support/register";
 
-import { spawn, sync, showList } from "./command";
-
 import { Command } from "commander";
+
 import { version as packageVersion } from "../package.json";
+import { showList, spawn, sync } from "./command";
 import { isWorkspace } from "./utils/workspace";
 
 const cwd = process.cwd();

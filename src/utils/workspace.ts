@@ -1,10 +1,10 @@
+import { basename } from "path";
 import {
-  getWorkspaces,
   findPackageRoot,
+  getWorkspaces,
   searchUp,
   WorkspaceInfo,
 } from "workspace-tools";
-import { basename } from "path";
 
 export const isWorkspace = (cwd: string) => {
   const workspaces = getWorkspaces(cwd);
