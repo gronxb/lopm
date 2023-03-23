@@ -1,4 +1,5 @@
 import { build } from "esbuild";
+
 import pkg from "./package.json" assert { type: "json" };
 
 build({
@@ -7,7 +8,7 @@ build({
   minify: true,
   sourcemap: true,
   format: "cjs",
-  external: Object.keys(pkg.dependencies),
+  external: Object.keys({ ...pkg.dependencies, ...pkg.devDependencies }),
   platform: "node",
   outfile: "./bin/index.cjs",
 });
