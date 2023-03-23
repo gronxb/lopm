@@ -13,6 +13,7 @@ But if you use `lopm`, hard links the files declared in the `files` field in the
 In other words, it has the same effect as a package installed by the npm registry.
 
 It is similar to [dependenciesMeta.*.injected](https://pnpm.io/package_json#dependenciesmeta) of pnpm, but sync is difficult periodically at current pnpm and does not support watch mode.
+
 ## Installation
 
 - local
@@ -28,6 +29,13 @@ It is similar to [dependenciesMeta.*.injected](https://pnpm.io/package_json#depe
 > pnpm add -g lopm # or yarn global add lopm / npm install -g lopm
 > lopm -v
 ```
+## Command
+* `list`  
+   Displays a list of available local packages and local packages specified in the current project.
+* `sync`  
+   Hardlink the local packages.
+* `run`  
+   The command entered in the parameter is executed. Local packages found during execution are placed in watch mode, and 'sync' commands are executed when they change.
 
 ## Getting Started
 
@@ -37,7 +45,7 @@ Specify `files` field to export out
 
 - **example**
 
-```json
+```js
 "name": "foo"
 ...
 "files": [
@@ -52,12 +60,12 @@ Specify `files` field to export out
 After `pnpm install` or `yarn install`, synchronization must be performed through the `lopm sync` command.  
 That is, it must be done immediately before build or development.
 
-The `lopm run <command>` command is in surveillance mode. Hard link again if any changes to the local package occur while the command is running.
+The `lopm run <command>` command is in watch mode. Hard link again if any changes to the local package occur while the command is running.
 
 The command `pnpm install` or `yarn install` will restore it.
 
 - **example**
-```json
+```js
 "name": "bar"
 ...
 "scripts": {
@@ -67,19 +75,23 @@ The command `pnpm install` or `yarn install` will restore it.
 ...
 ```
 
-The `dependency` field must specify the package name and link keyword to use, and the path where the local package resides must be specified as the relative path.
+The `dependency` field must specify the local package name.  
+Supports `workspace`, `link` and `file` protocols.
+
 
 - **example**
 
-```json
+```js
 "name": "bar"
 ...
 "dependencies": {
-    "foo": "link:../../packages/foo",
+    "foo": "workspace:0.0.1",
+    "foo2": "link:../../packages/foo",
+    "foo3": "file:../../packages/foo",
 },
 ...
 ```
-
+### How to use after `sync`
 If you followed the example above well, you can use it inside the `bar` package as follows:
 
 ```js

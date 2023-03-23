@@ -34,9 +34,7 @@ program
 
 program
   .command("sync")
-  .description(
-    "Hard links the files declared in the `files` field in the `package.json`"
-  )
+  .description("Hardlink the local packages")
   .action(async () => {
     try {
       if (!isWorkspace(cwd)) {
@@ -53,7 +51,7 @@ program
   .command("run")
   .argument("<command>", "string to split")
   .description(
-    "The command entered in the parameter is executed. Local packages found during execution are placed in watch mode, and 'sync' commands are executed when they change."
+    "The command entered in the parameter is executed. Local packages found during execution are placed in watch mode, and 'sync' commands are executed when they change"
   )
   .action(async () => {
     try {
