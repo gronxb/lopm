@@ -53,7 +53,7 @@ export const getLocalDependencies = (cwd: string): WorkspaceInfo => {
   const myPackageInfo = getMyPackageInfo(cwd);
 
   if (!myPackageInfo) {
-    throw new Error("Not Found `package.json`");
+    return [];
   }
   const { packageJson } = myPackageInfo;
 

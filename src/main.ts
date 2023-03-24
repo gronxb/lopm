@@ -28,7 +28,9 @@ program
 
       await showList(cwd);
     } catch (e) {
-      console.error(e);
+      if (e instanceof Error) {
+        console.error(e.message);
+      }
     }
   });
 
@@ -43,7 +45,9 @@ program
 
       await sync(cwd);
     } catch (e) {
-      console.error(e);
+      if (e instanceof Error) {
+        console.error(e.message);
+      }
     }
   });
 
@@ -51,7 +55,7 @@ program
   .command("run")
   .argument("<command>", "string to split")
   .description(
-    "The command entered in the parameter is executed. Local packages found during execution are placed in watch mode, and 'sync' commands are executed when they change"
+    "The command entered in the parameter is executed. While command is running, 'lopm' runs in watch mode."
   )
   .action(async () => {
     try {
@@ -62,7 +66,9 @@ program
       const commands = program.args.slice(1);
       await spawn(cwd, commands);
     } catch (e) {
-      console.error(e);
+      if (e instanceof Error) {
+        console.error(e.message);
+      }
     }
   });
 

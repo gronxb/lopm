@@ -35,7 +35,7 @@ export const sync = async (cwd: string) => {
     )
   );
 
-  console.log(pc.green("🔥 Done"));
+  console.log(pc.green("🔥 Sync Done"));
 };
 
 export const spawn = async (cwd: string, args: string[]) => {
@@ -105,7 +105,7 @@ export const showList = (cwd: string) => {
       console.log(pc.green(`- ${name}`));
     });
   } else {
-    console.log(pc.red("Not Found"));
+    console.log(pc.red("Not Found Local Dependencies"));
   }
 
   console.log("");
@@ -120,6 +120,6 @@ export const showList = (cwd: string) => {
       console.log(isDependency ? pc.green(`- ${name}`) : `- ${name}`);
     });
   } else {
-    console.log(pc.red("Not Found"));
+    console.log(pc.red("Not Found Local Packages"));
   }
 };
