@@ -7,7 +7,7 @@ Monorepo supports local packages.
 * [Installation](#Installation)  
 * [Command](#Command)  
 * [Getting Started](#Getting-Started) 
-* [Getting Started with Turborepo](#Getting-Started-with-`Turborepo`)
+* [Getting Started with Turborepo](#Getting-Started-with-Turborepo)
 ## Why use `lopm`?
 
 When using local packages in a monorepo, you might experience peer dependency problems because you use symbolic links.
