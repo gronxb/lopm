@@ -1,6 +1,6 @@
 {
   "name": "lopm",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "type": "module",
   "description": "CLI to Support Monorepo for local packages",
   "repository": {
@@ -16,7 +16,7 @@
     "build": "node esbuild.config.js",
     "test": "jest",
     "test:type": "tsc --noEmit",
-    "ci:publish": "turbo publish && changeset"
+    "ci:publish": "turbo publish && changeset publish"
   },
   "keywords": [
     "lopm",
