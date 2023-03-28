@@ -5,7 +5,7 @@
   "description": "CLI to Support Monorepo for local packages",
   "repository": {
     "type": "git",
-    "url": "https://github.com/gron1gh1/lopm.git"
+    "url": "https://github.com/gronxb/lopm.git"
   },
   "files": [
     "bin",
@@ -28,7 +28,7 @@
     "monorepo",
     "local-package"
   ],
-  "author": "gron1gh1 <gron1gh1@gmail.com>",
+  "author": "gronxb <gron1gh1@gmail.com>",
   "license": "MIT",
   "bin": {
     "lopm": "./bin/index.cjs"
