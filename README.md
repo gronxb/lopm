@@ -12,7 +12,7 @@ Monorepo supports local packages.
 
 When using local packages in a monorepo, you might experience peer dependency problems because you use symbolic links.
 
-But if you use `lopm`, hard links the files declared in the `files` field in the `package.json`
+But if you use `lopm`, copies the files declared in the `files` field in the `package.json`
 
 In other words, it has the same effect as a package installed by the npm registry.
 
