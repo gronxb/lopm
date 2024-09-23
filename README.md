@@ -66,7 +66,7 @@ $ npm lopm -v
    <img width="817" alt="image" src="https://user-images.githubusercontent.com/41789633/227415615-e376f391-0297-4397-813e-b08807f20686.png">
    
    **Example:**
-   `node_modules` capacity increases due to changes from pnpm symbolic links to hard links.
+   `node_modules` capacity increases due to changes from pnpm symbolic links to copies.
 * `lopm run <command>`  
   
    The command entered in the parameter is executed.  
@@ -98,7 +98,7 @@ Specify `files` field to export out
 After `pnpm install` or `yarn install`, synchronization must be performed through the `lopm sync` command.  
 That is, it must be done immediately before build or development.
 
-The `lopm run <command>` command is in watch mode. Hard link again if any changes to the local package occur while the command is running.
+The `lopm run <command>` command is in watch mode. Copy again if any changes to the local package occur while the command is running.
 
 The command `pnpm install` or `yarn install` will restore it.
 
